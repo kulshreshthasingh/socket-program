@@ -1,13 +1,12 @@
 import socket
 import random
 def main():
-    host = "0.0.0.0"   # Listen on all interfaces
-    port = 6000        # Use a port > 5000
+    host = "0.0.0.0"   
+    port = 6000       
 
-    server_name = "Server of John Q. Smith"
-    server_number = random.randint(1, 100)  # Fixed integer (can be randomized if you want)
-
-    # Create TCP socket
+    server_name = "Smith"
+    server_number = random.randint(1, 100) 
+    
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind((host, port))
     server_socket.listen(1)
@@ -17,7 +16,6 @@ def main():
     conn, addr = server_socket.accept()
     print(f"Connected by {addr}")
 
-    # Receive data
     data = conn.recv(1024).decode()
     if not data:
         conn.close()
