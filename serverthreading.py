@@ -17,11 +17,10 @@ def handle_client(conn, addr, server_name, server_number):
         if client_num < 1 or client_num > 100:
             print(f"[-] {addr} sent invalid number {client_num}. Terminating server.")
             conn.close()
-            exit(0)  # Kill the whole server as per requirement
+            exit(0) 
 
         total = client_num + server_number
 
-        # Display on server side
         print("\n--- Server Side ---")
         print(f"Client Name: {client_name}")
         print(f"Server Name: {server_name}")
@@ -29,7 +28,6 @@ def handle_client(conn, addr, server_name, server_number):
         print(f"Server Integer: {server_number}")
         print(f"Sum: {total}")
 
-        # Send reply back to client
         reply = f"{server_name},{server_number}"
         conn.send(reply.encode())
 
@@ -43,18 +41,17 @@ def main():
     host = "0.0.0.0"
     port = 6000
 
-    server_name = "Server of John Q. Smith"
+    server_name = "Smith"
     server_number = random.randint(1, 100)
 
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind((host, port))
-    server_socket.listen(5)  # Allow backlog of connections
+    server_socket.listen(5) 
 
     print(f"[STARTED] Concurrent Server listening on port {port}...")
 
     while True:
         conn, addr = server_socket.accept()
-        # Start a new thread for each client
         client_thread = threading.Thread(
             target=handle_client,
             args=(conn, addr, server_name, server_number)
