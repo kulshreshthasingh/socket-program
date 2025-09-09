@@ -1,0 +1,64 @@
+import socket
+import random
+def main():
+    host = "0.0.0.0"   # Listen on all interfaces
+    port = 6000        # Use a port > 5000
+
+    server_name = "Server of John Q. Smith"
+    server_number = random.randint(1, 100)  # Fixed integer (can be randomized if you want)
+
+    # Create TCP socket
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind((host, port))
+    server_socket.listen(1)
+
+    print(f"Server started on port {port}. Waiting for connection...")
+
+    conn, addr = server_socket.accept()
+    print(f"Connected by {addr}")
+
+    # Receive data
+    data = conn.recv(1024).decode()
+    if not data:
+        conn.close()
+        server_socket.close()
+        return
+
+    try:
+        client_name, client_num_str = data.split(",")
+        client_num = int(client_num_str.strip())
+    except ValueError:
+        print("Invalid message format. Closing connection.")
+        conn.close()
+        server_socket.close()
+        return
+
+    # Terminate if number is outside 1–100
+    if client_num < 1 or client_num > 100:
+        print("Received number outside 1–100. Terminating server.")
+        conn.close()
+        server_socket.close()
+        return
+
+    # Compute sum
+    total = client_num + server_number
+
+    # Display details
+    print("\n--- Server Side ---")
+    print(f"Client Name: {client_name}")
+    print(f"Server Name: {server_name}")
+    print(f"Client Integer: {client_num}")
+    print(f"Server Integer: {server_number}")
+    print(f"Sum: {total}")
+
+    # Send back server details
+    reply = f"{server_name},{server_number}"
+    conn.send(reply.encode())
+
+    # Cleanup
+    conn.close()
+    server_socket.close()
+    print("Server terminated.")
+
+if __name__ == "__main__":
+    main()
